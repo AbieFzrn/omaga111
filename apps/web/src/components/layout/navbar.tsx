@@ -54,17 +54,16 @@ export function Navbar(): JSX.Element {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+    <header className="sticky top-0 z-50 w-full border-b border-bluetix-primary/20 bg-bluetix-dark/95 backdrop-blur supports-[backdrop-filter]:bg-bluetix-dark/60">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo and Brand */}
           <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-            <div className="flex items-center justify-center w-8 h-8 bg-gradient-primary rounded-lg">
-              <Calendar className="h-5 w-5 text-white" />
+            <div className="flex items-center justify-center w-8 h-8 bg-bluetix-primary rounded-full">
+              <span className="text-white font-bold text-sm">B</span>
             </div>
             <div className="hidden sm:block">
-              <span className="text-xl font-bold text-gray-900">Hi.Events</span>
-              <Badge variant="secondary" className="ml-2 text-xs">Beta</Badge>
+              <span className="text-xl font-bold text-white">BlueTix</span>
             </div>
           </Link>
 
@@ -72,18 +71,13 @@ export function Navbar(): JSX.Element {
           <nav className="hidden md:flex items-center space-x-8">
             <Link 
               href="/events" 
-              className="text-gray-600 hover:text-gray-900 transition-colors font-medium"
+              className="text-muted-foreground hover:text-white transition-colors font-medium"
             >
-              Discover Events
+              Browse Events
             </Link>
-            <Link 
-              href="/events/create" 
-              className="text-gray-600 hover:text-gray-900 transition-colors font-medium"
-            >
-              Create Event
-            </Link>
-            <Button variant="ghost" size="sm">
-              <Search className="h-4 w-4" />
+            <Button variant="outline" size="sm" className="border-bluetix-primary/30 text-white hover:bg-bluetix-primary/10">
+              <Zap className="h-4 w-4 mr-2" />
+              For Organizers
             </Button>
           </nav>
 
@@ -139,10 +133,10 @@ export function Navbar(): JSX.Element {
             ) : (
               /* Auth Buttons for non-authenticated users */
               <div className="flex items-center space-x-3">
-                <Button asChild variant="ghost" size="sm">
-                  <Link href="/auth/login">Sign In</Link>
+                <Button asChild variant="outline" size="sm" className="border-bluetix-primary/30 text-white hover:bg-bluetix-primary/10">
+                  <Link href="/auth/login">Sign in</Link>
                 </Button>
-                <Button asChild size="sm">
+                <Button asChild size="sm" className="bg-bluetix-primary hover:bg-bluetix-primary/90 text-white">
                   <Link href="/auth/register">Get Started</Link>
                 </Button>
               </div>

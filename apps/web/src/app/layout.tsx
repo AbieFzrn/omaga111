@@ -18,8 +18,8 @@ const inter = Inter({ subsets: ['latin'] });
  * Application metadata configuration
  */
 export const metadata: Metadata = {
-  title: 'Hi.Events - Modern Event Management Platform',
-  description: 'Create, manage, and discover amazing events with Hi.Events. The modern platform for event organizers and attendees.',
+  title: 'BlueTix - Modern Event Management Platform',
+  description: 'Create, manage, and discover amazing events with BlueTix. The modern platform for event organizers and attendees.',
   keywords: [
     'events',
     'event management',
@@ -32,15 +32,15 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'Hi.Events Team' }],
   openGraph: {
-    title: 'Hi.Events - Modern Event Management Platform',
-    description: 'Create, manage, and discover amazing events with Hi.Events.',
+    title: 'BlueTix - Modern Event Management Platform',
+    description: 'Create, manage, and discover amazing events with BlueTix.',
     type: 'website',
     locale: 'en_US',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Hi.Events - Modern Event Management Platform',
-    description: 'Create, manage, and discover amazing events with Hi.Events.',
+    title: 'BlueTix - Modern Event Management Platform',
+    description: 'Create, manage, and discover amazing events with BlueTix.',
   },
   viewport: 'width=device-width, initial-scale=1',
   robots: 'index, follow',
@@ -61,7 +61,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <ToastProvider>
-            <div className="min-h-screen flex flex-col bg-gray-50">
+            <div className="min-h-screen flex flex-col bg-bluetix-dark">
               {/* Navigation header */}
               <Navbar />
               
