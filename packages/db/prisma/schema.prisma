@@ -1,0 +1,142 @@
+// Prisma schema for Hi.Events platform
+// Defines the database structure for event management
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model for authentication and user management
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // Hashed password
+  name      String?
+  avatar    String?  // URL to user's profile picture
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  events        Event[]        @relation("EventOrganizer")
+  registrations Registration[]
+  
+  @@map("users")
+}
+
+// Event model - core entity for the platform
+model Event {
+  id          String      @id @default(cuid())
+  title       String
+  description String?     @db.Text
+  location    String
+  startDate   DateTime
+  endDate     DateTime?
+  isPublic    Boolean     @default(true)
+  maxAttendees Int?       // Maximum number of attendees allowed
+  price       Float?      // Event price (null for free events)
+  currency    String      @default("USD")
+  imageUrl    String?     // Event cover image
+  status      EventStatus @default(DRAFT)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  // Foreign keys
+  organizerId String
+  categoryId  String?
+  
+  // Relations
+  organizer     User           @relation("EventOrganizer", fields: [organizerId], references: [id], onDelete: Cascade)
+  category      Category?      @relation(fields: [categoryId], references: [id])
+  registrations Registration[]
+  tickets       Ticket[]
+  
+  @@map("events")
+}
+
+// Event categories for better organization
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  color       String   @default("#3B82F6") // Hex color for UI
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  events Event[]
+  
+  @@map("categories")
+}
+
+// User registrations for events
+model Registration {
+  id           String           @id @default(cuid())
+  status       RegistrationStatus @default(PENDING)
+  registeredAt DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  notes        String?          // Special requirements or notes
+  
+  // Foreign keys
+  userId  String
+  eventId String
+  ticketId String?
+  
+  // Relations
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event  Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  ticket Ticket? @relation(fields: [ticketId], references: [id])
+  
+  // Unique constraint to prevent duplicate registrations
+  @@unique([userId, eventId])
+  @@map("registrations")
+}
+
+// Ticket types for events (free, paid, VIP, etc.)
+model Ticket {
+  id          String   @id @default(cuid())
+  name        String   // e.g., "General Admission", "VIP", "Early Bird"
+  description String?
+  price       Float    @default(0)
+  quantity    Int      // Total tickets available
+  sold        Int      @default(0) // Tickets sold
+  salesStart  DateTime?
+  salesEnd    DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Foreign keys
+  eventId String
+  
+  // Relations
+  event         Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  registrations Registration[]
+  
+  @@map("tickets")
+}
+
+// Enums for type safety and consistency
+
+enum Role {
+  USER
+  ADMIN
+  ORGANIZER
+}
+
+enum EventStatus {
+  DRAFT      // Event is being created
+  PUBLISHED  // Event is live and accepting registrations
+  CANCELLED  // Event has been cancelled
+  COMPLETED  // Event has finished
+}
+
+enum RegistrationStatus {
+  PENDING    // Registration submitted but not confirmed
+  CONFIRMED  // Registration confirmed
+  CANCELLED  // User cancelled registration
+  WAITLISTED // Event is full, user is on waitlist
+}
